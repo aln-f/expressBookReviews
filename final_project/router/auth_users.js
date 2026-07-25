@@ -27,7 +27,7 @@ const authenticatedUser = (username, password) => {
     }
 }
 
-//only registered users can login
+// Only registered users can login
 regd_users.post("/login", (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
@@ -38,14 +38,11 @@ regd_users.post("/login", (req, res) => {
 
     if (authenticatedUser(username, password)) {
         let accessToken = jwt.sign({
-            data: password
+            username
         }, 'access', { expiresIn: 60 * 60 });
 
-        // Store access token and username in session
-        req.session.authorization = {
-            accessToken,
-            username
-        }
+        // Store access token in session
+        req.session.authorization = { accessToken };
         return res.status(200).send("User successfully logged in");
     } else {
         return res.status(208).json({ message: "Invalid Login. Check username and password" });
